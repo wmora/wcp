@@ -2,11 +2,9 @@
     "compilerOptions": {
         "outDir": "./dist",
 		"allowJs": false,
-		"allowSyntheticDefaultImports": true,
 		"module": "commonjs",
 		"target": "es6",
 		"baseUrl": ".",
-		"noImplicitAny": true,
 		"paths": {
             "*": [
                 "node_modules/*"
