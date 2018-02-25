@@ -1,0 +1,7 @@
+{
+  "name": "wcp",
+  "version": "1.0.0",
+  "description": "World Cup predictor",
+  "main": "app.js",
+  "license": "MIT"
+}
