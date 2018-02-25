@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "World Cup predictor",
   "scripts": {
-	"dev": "tsc && node dist/app.js",
-	"lint": "tslint -c tslint.json -p tsconfig.json"
+	  "dev": "tsc && node dist/app.js",
+	  "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "license": "MIT",
   "dependencies": {
