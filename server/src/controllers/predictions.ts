@@ -1,9 +1,18 @@
 import {Request, Response} from 'express'
+import * as matchController from './matches'
 
 export function postPrediction(request: Request, response: Response): void {
 	//validateUser()
-	//findMatch()
+	
+	const match = matchController.findMatch(request.body.id)
+
+	if (!match) {
+		response.sendStatus(404)
+		return
+	}
+
 	//validateBody()
 	//save()
-	response.end()
+	
+	response.send({match})
 }
