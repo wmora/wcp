@@ -4,7 +4,7 @@ import * as matchController from './matches'
 export function postPrediction(request: Request, response: Response): void {
 	//validateUser()
 	
-	const match = matchController.findMatch(request.body.id)
+	const match = matchController.findMatch(request.body.matchId)
 
 	if (!match) {
 		response.sendStatus(404)
