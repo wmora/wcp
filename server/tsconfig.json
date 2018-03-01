@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
         "outDir": "./dist",
-		"allowJs": false,
-		"module": "commonjs",
-		"target": "es6",
-		"baseUrl": ".",
-		"paths": {
+        "allowJs": false,
+        "module": "commonjs",
+        "target": "es6",
+        "baseUrl": ".",
+        "paths": {
             "*": [
                 "node_modules/*"
             ]

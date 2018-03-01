@@ -1,20 +1,22 @@
 {
-  "name": "wcp",
-  "version": "1.0.0",
-  "description": "World Cup predictor",
-  "scripts": {
-    "dev": "tsc && node dist/app.js",
-    "lint": "tslint -c tslint.json -p tsconfig.json"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2"
-  },
-  "devDependencies": {
-    "@types/body-parser": "^1.16.8",
-    "@types/express": "^4.11.1",
-    "tslint": "^5.9.1",
-    "typescript": "^2.7.2"
-  }
+	"name": "wcp",
+	"version": "1.0.0",
+	"description": "World Cup predictor",
+	"scripts": {
+		"dev": "tsc && node dist/app.js",
+		"lint": "tslint -c tslint.json -p tsconfig.json"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "^1.18.2",
+		"express": "^4.16.2",
+		"mongodb": "^3.0.3"
+	},
+	"devDependencies": {
+		"@types/mongodb": "^3.0.5",
+		"@types/body-parser": "^1.16.8",
+		"@types/express": "^4.11.1",
+		"tslint": "^5.9.1",
+		"typescript": "^2.7.2"
+	}
 }

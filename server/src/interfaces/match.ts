@@ -1,14 +1,14 @@
 export interface Match {
-	id: string
+    id: string
     homeTeamId: string
-	awayTeamId: string
-	date: Date
-	status: MatchStatus
-	winnerTeamId?: string
+    awayTeamId: string
+    date: Date
+    status: MatchStatus
+    winnerTeamId?: string
 }
 
 export enum MatchStatus {
-	Pending = "pending",
-	InProgress = "in_progress",
-	Finished = "finished"
+    Pending = 'pending',
+    InProgress = 'in_progress',
+    Finished = 'finished'
 }

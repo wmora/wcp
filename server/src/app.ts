@@ -1,9 +1,13 @@
-import * as express from 'express'
+import { connect as connectDb } from './db/db'
+
 import * as bodyParser from 'body-parser'
+import * as express from 'express'
 
 import predictionsController = require('./controllers/predictions')
 
 const app = express()
+
+connectDb()
 
 app.use(bodyParser.json())
 
