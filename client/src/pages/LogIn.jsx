@@ -12,15 +12,15 @@ export default class LogIn extends Component {
         <Form>
           <FormGroup>
             <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Jane Doe" />
+            <FormControl required type="text" placeholder="Jane Doe" />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Email</ControlLabel>
-            <FormControl type="email" placeholder="jane.doe@example.com" />
+            <FormControl required type="email" placeholder="jane.doe@example.com" />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Password</ControlLabel>
-            <FormControl type="password" placeholder="Password" />
+            <FormControl required type="password" placeholder="Password" />
           </FormGroup>
           <Button type="submit">Log in</Button>
         </Form>
