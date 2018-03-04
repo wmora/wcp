@@ -3,7 +3,7 @@ import { db } from '../db/db'
 import { MatchStatus } from '../interfaces/match'
 import * as matchController from './matches'
 
-export function postPrediction(request: Request, response: Response): void {
+export function postPick(request: Request, response: Response): void {
     // TODO: validateUser()
 
     const { matchId, winningTeamId } = request.body
@@ -19,22 +19,25 @@ export function postPrediction(request: Request, response: Response): void {
         response.status(400).send('Cannot modify prediction for match')
     }
 
-    const isValidWinningTeamId = [match.homeTeamId, match.awayTeamId].some((teamId) => teamId === winningTeamId)
+    const isValidWinningTeamId = [match.homeTeam.id, match.awayTeam.id].some((teamId) => teamId === winningTeamId)
 
     if (!isValidWinningTeamId) {
         response.status(400).send(`Invalid winningTeamId: ${winningTeamId}`)
     }
 
-    const collection = db.collection('predictions')
+    const collection = db.collection('picks')
 
-    collection.insert({
-        matchId,
-        winningTeamId
-    }, (err, result) => {
-        if (err) {
-            response.sendStatus(400)
-        } else {
-            response.send({ prediction: result.ops[0] })
+    collection.insert(
+        {
+            matchId,
+            winningTeamId
+        },
+        (err, result) => {
+            if (err) {
+                response.sendStatus(400)
+            } else {
+                response.send({ prediction: result.ops[0] })
+            }
         }
-    })
+    )
 }

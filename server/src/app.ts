@@ -5,7 +5,7 @@ import * as express from 'express'
 
 import * as authenticationController from './controllers/authentication'
 import * as matchesController from './controllers/matches'
-import * as predictionsController from './controllers/predictions'
+import * as picksController from './controllers/picks'
 
 const app = express()
 
@@ -20,7 +20,7 @@ app.use((request, response, next) => {
 })
 
 app.get('/matches', matchesController.listMatches)
-app.post('/predictions', predictionsController.postPrediction)
+app.post('/picks', picksController.postPick)
 app.post('/login', authenticationController.logIn)
 
 app.listen(3024, () => console.log('Example app listening on port 3024!'))
