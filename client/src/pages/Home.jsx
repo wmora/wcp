@@ -28,10 +28,11 @@ export default class Home extends Component {
                 <Col md={4} key={group.id}>
                     <h1> {group.name} </h1>
                     {group.matches.map((match) => {
+                        const matchId = `${group.id}-${match.id}`
                         const homeTeamKey = `${match.id}-${match.homeTeam.id}`
                         const awayTeamKey = `${match.id}-${match.awayTeam.id}`
                         return (
-                            <ListGroup>
+                            <ListGroup key={matchId}>
                                 <ListGroupItem key={homeTeamKey}>{match.homeTeam.name}</ListGroupItem>
                                 <ListGroupItem key={awayTeamKey}>{match.awayTeam.name}</ListGroupItem>
                             </ListGroup>
