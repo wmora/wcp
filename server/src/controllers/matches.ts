@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { Match, MatchStatus } from '../interfaces/match'
-import * as teamController from './teams'
 import data from '../models/data'
+import * as teamController from './teams'
 
 export function findMatch(id: string): Match {
     return findMatchInRound(data.groups, id) || findMatchInRound(data.knockout, id)
