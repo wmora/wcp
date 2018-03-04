@@ -6,13 +6,13 @@ import LogIn from './pages/LogIn'
 import registerServiceWorker from './registerServiceWorker'
 
 const Root = () => {
-  return (
-    <div className="container">
-      <Router>
-        <Route path="/" component={LogIn} />
-      </Router>
-    </div>
-  )
+    return (
+        <div className="container">
+            <Router>
+                <Route path="/" component={LogIn} />
+            </Router>
+        </div>
+    )
 }
 
 ReactDOM.render(<Root />, document.getElementById('root'))
