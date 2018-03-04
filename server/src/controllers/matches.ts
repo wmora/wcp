@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { Match, MatchStatus } from '../interfaces/match'
+import * as teamController from './teams'
 import data from '../models/data'
 
 export function findMatch(id: string): Match {
@@ -22,7 +23,11 @@ export function listMatches(request: Request, response: Response): void {
     const matches = []
 
     for (const group of Object.keys(data.groups)) {
-        matches.push(data.groups[group].matches.map((match) => transformMatch(match)))
+        matches.push({
+            id: `group_${group}`,
+            name: `Group ${group.toUpperCase()}`,
+            matches: data.groups[group].matches.map((match) => transformMatch(match))
+        })
     }
 
     response.send({ matches })
@@ -31,8 +36,8 @@ export function listMatches(request: Request, response: Response): void {
 function transformMatch(match: any): Match {
     return {
         id: `${match.name}`,
-        homeTeamId: `${match.home_team}`,
-        awayTeamId: `${match.away_team}`,
+        homeTeam: teamController.findById(`${match.home_team}`),
+        awayTeam: teamController.findById(`${match.away_team}`),
         status: MatchStatus.Pending,
         date: new Date(match.date),
         winnerTeamId: ''

@@ -1,7 +1,9 @@
+import { Team } from './team'
+
 export interface Match {
     id: string
-    homeTeamId: string
-    awayTeamId: string
+    homeTeam: Team
+    awayTeam: Team
     date: Date
     status: MatchStatus
     winnerTeamId?: string
