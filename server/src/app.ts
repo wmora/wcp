@@ -15,4 +15,4 @@ app.use(bodyParser.json())
 app.get('/matches', matchesController.listMatches)
 app.post('/predictions', predictionsController.postPrediction)
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(3024, () => console.log('Example app listening on port 3024!'))
