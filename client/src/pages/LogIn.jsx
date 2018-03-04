@@ -1,5 +1,5 @@
-import React, { Component } from "react"
-import { Jumbotron, Form, FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap"
+import React, { Component } from 'react'
+import { Jumbotron, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
 
 export default class LogIn extends Component {
   render() {
