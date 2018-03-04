@@ -1,29 +1,35 @@
 import React, { Component } from 'react'
 import { Jumbotron, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
 
-export default class LogIn extends Component {
+export default class SignUp extends Component {
     constructor(props, context) {
         super(props, context)
 
         this.state = {
+            name: '',
             email: '',
             password: ''
         }
     }
 
     onClick = () => {
-        const { email, password } = this.state
+        const { name, email, password } = this.state
 
-        fetch('http://localhost:3024/login', {
+        fetch('http://localhost:3024/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                name,
                 email,
                 password
             })
         }).then(() => {
             // TODO: redirect to home
         })
+    }
+
+    onNameChange = (e) => {
+        this.setState({ name: e.target.value })
     }
 
     onEmailChange = (e) => {
@@ -39,9 +45,13 @@ export default class LogIn extends Component {
             <div>
                 <Jumbotron>
                     <h1>Welcome!</h1>
-                    <p>Please log in to continue</p>
+                    <p>Please sign up to continue</p>
                 </Jumbotron>
                 <Form>
+                    <FormGroup>
+                        <ControlLabel>Name</ControlLabel>
+                        <FormControl required type="name" onChange={this.onNameChange} value={this.state.name} placeholder="Jane Doe" />
+                    </FormGroup>
                     <FormGroup>
                         <ControlLabel>Email</ControlLabel>
                         <FormControl
@@ -64,7 +74,7 @@ export default class LogIn extends Component {
                     </FormGroup>
                 </Form>
                 <Button onClick={this.onClick} type="submit">
-                    Log in
+                    Sign up
                 </Button>
             </div>
         )
