@@ -10,6 +10,10 @@ export default class Home extends Component {
         }
     }
 
+    onTeamPicked = (e) => {
+        // TODO: Create pick
+    }
+
     componentDidMount() {
         fetch('http://localhost:3024/matches')
             .then((response) => response.json())
@@ -33,8 +37,12 @@ export default class Home extends Component {
                         const awayTeamKey = `${match.id}-${match.awayTeam.id}`
                         return (
                             <ListGroup key={matchId}>
-                                <ListGroupItem key={homeTeamKey}>{match.homeTeam.name}</ListGroupItem>
-                                <ListGroupItem key={awayTeamKey}>{match.awayTeam.name}</ListGroupItem>
+                                <ListGroupItem onClick={this.onTeamPicked} id={homeTeamKey}>
+                                    {match.homeTeam.name}
+                                </ListGroupItem>
+                                <ListGroupItem onClick={this.onTeamPicked} id={awayTeamKey}>
+                                    {match.awayTeam.name}
+                                </ListGroupItem>
                             </ListGroup>
                         )
                     })}
