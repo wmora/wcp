@@ -13,9 +13,7 @@ export default class Home extends Component {
         }
     }
 
-    postPick = (id) => {
-        console.log(`Posting pick ${id}`)
-    }
+    postPick = (id) => {}
 
     onTeamPicked = (e) => {
         if (isLoggedIn()) {
@@ -44,6 +42,10 @@ export default class Home extends Component {
             })
     }
 
+    getFlagClass = (iso2) => {
+        return `flag-icon flag-icon-${iso2}`
+    }
+
     render() {
         const { matches } = this.state
 
@@ -58,10 +60,10 @@ export default class Home extends Component {
                         return (
                             <ListGroup key={matchId}>
                                 <ListGroupItem onClick={this.onTeamPicked} id={homeTeamKey}>
-                                    {match.homeTeam.name}
+                                    <span class={this.getFlagClass(match.homeTeam.iso2)} /> {match.homeTeam.name}
                                 </ListGroupItem>
                                 <ListGroupItem onClick={this.onTeamPicked} id={awayTeamKey}>
-                                    {match.awayTeam.name}
+                                    <span class={this.getFlagClass(match.awayTeam.iso2)} /> {match.awayTeam.name}
                                 </ListGroupItem>
                             </ListGroup>
                         )
