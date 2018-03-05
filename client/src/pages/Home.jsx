@@ -23,7 +23,11 @@ export default class Home extends Component {
             winningTeamId
         }
 
-        console.log(pick)
+        fetch('http://localhost:3024/picks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pick)
+        }).then((response) => response.json())
     }
 
     onTeamPicked = (e) => {
