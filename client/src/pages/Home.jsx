@@ -1,17 +1,37 @@
 import React, { Component } from 'react'
 import { Jumbotron, Grid, Col, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { isLoggedIn } from '../utils/authentication'
+import LogIn from './LogIn'
 
 export default class Home extends Component {
     constructor(props, context) {
         super(props, context)
 
         this.state = {
-            matches: []
+            matches: [],
+            showLogin: false
         }
     }
 
+    postPick = (id) => {
+        console.log(`Posting pick ${id}`)
+    }
+
     onTeamPicked = (e) => {
-        // TODO: Create pick
+        if (isLoggedIn()) {
+            // TODO: Create pick
+            this.postPick(e.target.id)
+        } else {
+            this.setState({
+                showLogin: true
+            })
+        }
+    }
+
+    onLogInResult = (success) => {
+        this.setState({
+            showLogin: false
+        })
     }
 
     componentDidMount() {
@@ -57,6 +77,7 @@ export default class Home extends Component {
                     <p>Pick the winning teams!</p>
                 </Jumbotron>
                 <Grid>{matchesContent}</Grid>
+                <LogIn show={this.state.showLogin} onLogInResult={this.onLogInResult} />
             </div>
         )
     }

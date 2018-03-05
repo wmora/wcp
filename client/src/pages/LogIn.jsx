@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Jumbotron, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
+import { Modal, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
+import { setToken } from '../utils/authentication'
 
 export default class LogIn extends Component {
     constructor(props, context) {
@@ -21,8 +22,9 @@ export default class LogIn extends Component {
                 email,
                 password
             })
-        }).then(() => {
-            // TODO: redirect to home
+        }).then((response) => {
+            setToken()
+            this.props.onLogInResult(true)
         })
     }
 
@@ -34,39 +36,49 @@ export default class LogIn extends Component {
         this.setState({ password: e.target.value })
     }
 
+    onModalDismiss = () => {
+        this.props.onLogInResult(false)
+    }
+
     render() {
         return (
-            <div>
-                <Jumbotron>
-                    <h1>Welcome!</h1>
-                    <p>Please log in to continue</p>
-                </Jumbotron>
-                <Form>
-                    <FormGroup>
-                        <ControlLabel>Email</ControlLabel>
-                        <FormControl
-                            required
-                            type="email"
-                            onChange={this.onEmailChange}
-                            value={this.state.email}
-                            placeholder="jane.doe@example.com"
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl
-                            required
-                            type="password"
-                            onChange={this.onPasswordChange}
-                            value={this.state.password}
-                            placeholder="Password"
-                        />
-                    </FormGroup>
-                </Form>
-                <Button onClick={this.onClick} type="submit">
-                    Log in
-                </Button>
-            </div>
+            <Modal show={this.props.show} onHide={this.onModalDismiss}>
+                <Modal.Header>
+                    <Modal.Title>Welcome! Please log in to continue</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Form>
+                        <FormGroup>
+                            <ControlLabel>Email</ControlLabel>
+                            <FormControl
+                                required
+                                type="email"
+                                onChange={this.onEmailChange}
+                                value={this.state.email}
+                                placeholder="jane.doe@example.com"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel>Password</ControlLabel>
+                            <FormControl
+                                required
+                                type="password"
+                                onChange={this.onPasswordChange}
+                                value={this.state.password}
+                                placeholder="Password"
+                            />
+                        </FormGroup>
+                    </Form>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button onClick={this.onModalDismiss}>Close</Button>
+                    <Button bsStyle="primary" onClick={this.onClick}>
+                        Log in
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         )
     }
 }
