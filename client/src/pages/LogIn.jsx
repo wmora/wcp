@@ -15,6 +15,10 @@ export default class LogIn extends Component {
     onClick = () => {
         const { email, password } = this.state
 
+        if (!email || !password) {
+            return
+        }
+
         fetch('http://localhost:3024/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -46,9 +50,8 @@ export default class LogIn extends Component {
                 <Modal.Header>
                     <Modal.Title>Welcome! Please log in to continue</Modal.Title>
                 </Modal.Header>
-
-                <Modal.Body>
-                    <Form>
+                <Form>
+                    <Modal.Body>
                         <FormGroup>
                             <ControlLabel>Email</ControlLabel>
                             <FormControl
@@ -69,15 +72,14 @@ export default class LogIn extends Component {
                                 placeholder="Password"
                             />
                         </FormGroup>
-                    </Form>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button onClick={this.onModalDismiss}>Close</Button>
-                    <Button bsStyle="primary" onClick={this.onClick}>
-                        Log in
-                    </Button>
-                </Modal.Footer>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.onModalDismiss}>Close</Button>
+                        <Button bsStyle="primary" onClick={this.onClick} type="submit">
+                            Log in
+                        </Button>
+                    </Modal.Footer>
+                </Form>
             </Modal>
         )
     }
