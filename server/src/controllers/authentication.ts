@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import env from '../config/env'
 import { db } from '../db/db'
 import * as auth0 from '../external/auth0'
-import { User } from '../interfaces/user'
 
 export async function signUp(request: Request, response: Response) {
     const { name, email, password } = request.body
@@ -17,32 +16,23 @@ export async function signUp(request: Request, response: Response) {
 
         const collection = db.collection('users')
 
-        collection.insert(
-            {
-                name,
-                email,
-                auth0Id: _id
-            },
-            (err, result) => {
-                if (err) {
-                    response.sendStatus(400)
-                } else {
-                    ;(async () => {
-                        const newUser = result.ops[0]
-                        const session = await auth0.logIn(email, password)
+        const result = await collection.insert({
+            name,
+            email,
+            auth0Id: _id
+        })
 
-                        response.send({
-                            user: {
-                                _id: newUser._id,
-                                name: newUser.name,
-                                email: newUser.email,
-                                ...session
-                            }
-                        })
-                    })()
-                }
+        const newUser = result.ops[0]
+        const session = await auth0.logIn(email, password)
+
+        response.send({
+            user: {
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                ...session
             }
-        )
+        })
     } catch (error) {
         response.status(400).send({
             error: 'signup_error',
