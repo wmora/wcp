@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { db } from '../db/db'
 import env from '../config/env'
+import { db } from '../db/db'
 import * as auth0 from '../external/auth0'
 
 export async function signUp(request: Request, response: Response) {
@@ -12,7 +12,7 @@ export async function signUp(request: Request, response: Response) {
     }
 
     try {
-        const result = await auth0.signUp(email, password)
+        const { _id } = await auth0.signUp(email, password)
 
         const collection = db.collection('users')
 
@@ -20,7 +20,7 @@ export async function signUp(request: Request, response: Response) {
             {
                 name,
                 email,
-                auth0Id: result._id
+                auth0Id: _id
             },
             (err, result) => {
                 if (err) {
