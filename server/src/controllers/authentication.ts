@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import * as request from 'request'
 import env from '../config/env'
 import * as auth0 from '../external/auth0'
 

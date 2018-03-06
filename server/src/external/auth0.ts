@@ -9,7 +9,7 @@ export async function logIn(email: string, password: string): Promise<any> {
         body: {
             grant_type: 'password',
             username: email,
-            password: password,
+            password,
             scope: 'user',
             client_id: env.AUTH0.CLIENT_ID,
             client_secret: env.AUTH0.CLIENT_SECRET
