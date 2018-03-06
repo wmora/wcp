@@ -50,8 +50,24 @@ export async function logIn(req: Request, response: Response) {
     }
 
     try {
-        const result = await auth0.logIn(email, password)
-        response.send(result)
+        const collection = db.collection('users')
+
+        const user = await collection.findOne({ email }, {})
+
+        if (!user) {
+            response.status(404).send('User not found')
+            return
+        }
+
+        const session = await auth0.logIn(email, password)
+        response.send({
+            user: {
+                _id: user._id,
+                name: user.name,
+                email,
+                ...session
+            }
+        })
     } catch (error) {
         response.status(400).send({
             error: 'authentication_error',
