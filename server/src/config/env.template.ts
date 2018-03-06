@@ -4,7 +4,8 @@
 const AUTH0 = {
     DOMAIN: '',
     CLIENT_ID: '',
-    CLIENT_SECRET: ''
+    CLIENT_SECRET: '',
+    CONNECTION: ''
 }
 
 const env = {

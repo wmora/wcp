@@ -22,5 +22,6 @@ app.use((request, response, next) => {
 app.get('/matches', matchesController.listMatches)
 app.post('/picks', picksController.postPick)
 app.post('/login', authenticationController.logIn)
+app.post('/signup', authenticationController.signUp)
 
 app.listen(3024, () => console.log('Example app listening on port 3024!'))
