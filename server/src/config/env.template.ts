@@ -5,7 +5,9 @@ const AUTH0 = {
     DOMAIN: '',
     CLIENT_ID: '',
     CLIENT_SECRET: '',
-    CONNECTION: ''
+    CONNECTION: '',
+    AUDIENCE: '',
+    SCOPE: ''
 }
 
 const env = {

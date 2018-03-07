@@ -26,7 +26,8 @@ export async function logIn(email: string, password: string): Promise<any> {
             grant_type: 'password',
             username: email,
             password,
-            scope: 'user',
+            scope: env.AUTH0.SCOPE,
+            audience: env.AUTH0.AUDIENCE,
             client_id: env.AUTH0.CLIENT_ID,
             client_secret: env.AUTH0.CLIENT_SECRET
         }
