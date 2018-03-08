@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
-import { setToken } from '../utils/authentication'
+import { setAccessToken } from '../utils/authentication'
 
 export default class LogIn extends Component {
     constructor(props, context) {
@@ -26,10 +26,12 @@ export default class LogIn extends Component {
                 email,
                 password
             })
-        }).then((response) => {
-            setToken()
-            this.props.onLogInResult(true)
         })
+            .then((response) => response.json())
+            .then(({ user }) => {
+                setAccessToken(user.accessToken)
+                this.props.onLogInResult(true)
+            })
     }
 
     onEmailChange = (e) => {
