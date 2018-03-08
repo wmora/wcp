@@ -59,6 +59,21 @@ export async function logIn(req: Request, response: Response) {
         }
 
         const session = await auth0.logIn(email, password)
+
+        await getUsersCollection().updateOne(
+            {
+                _id: user._id
+            },
+            {
+                $set: {
+                    refreshToken: session.refreshToken
+                }
+            },
+            {}
+        )
+
+        delete session.refreshToken
+
         response.send({
             user: {
                 _id: user._id,
