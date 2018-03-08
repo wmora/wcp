@@ -13,17 +13,18 @@ export async function signUp(request: Request, response: Response) {
 
     try {
         const { _id } = await auth0.signUp(email, password)
+        const session = await auth0.logIn(email, password)
 
-        const collection = db.collection('users')
-
-        const result = await collection.insert({
+        const result = await getUsersCollection().insert({
             name,
             email,
-            auth0Id: _id
+            auth0Id: _id,
+            refreshToken: session.refreshToken
         })
 
+        delete session.refreshToken
+
         const newUser = result.ops[0]
-        const session = await auth0.logIn(email, password)
 
         response.send({
             user: {
@@ -50,9 +51,7 @@ export async function logIn(req: Request, response: Response) {
     }
 
     try {
-        const collection = db.collection('users')
-
-        const user = await collection.findOne({ email }, {})
+        const user = await getUsersCollection().findOne({ email }, {})
 
         if (!user) {
             response.status(404).send('User not found')
@@ -74,4 +73,8 @@ export async function logIn(req: Request, response: Response) {
             errorDescription: error.error.error_description
         })
     }
+}
+
+function getUsersCollection(): any {
+    return db.collection('users')
 }

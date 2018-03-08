@@ -33,5 +33,10 @@ export async function logIn(email: string, password: string): Promise<any> {
         }
     })
 
-    return result
+    return {
+        accessToken: result.access_token,
+        expiresIn: result.expires_in,
+        tokenType: result.token_type,
+        refreshToken: result.refresh_token
+    }
 }
