@@ -25,4 +25,10 @@ app.post('/picks', authCheck, picksController.postPick)
 app.post('/login', authenticationController.logIn)
 app.post('/signup', authenticationController.signUp)
 
+app.use((error, request, response, next) => {
+    if (error.name === 'UnauthorizedError') {
+        response.status(401).send('Invalid token')
+    }
+})
+
 app.listen(3024, () => console.log('Example app listening on port 3024!'))
