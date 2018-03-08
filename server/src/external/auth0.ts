@@ -3,7 +3,7 @@ import env from '../config/env'
 
 export async function signUp(email: string, password: string): Promise<any> {
     const result = await request.post({
-        url: `${env.AUTH0.DOMAIN}/dbconnections/signup`,
+        url: `https://${env.AUTH0.DOMAIN}/dbconnections/signup`,
         json: true,
         headers: { 'Content-Type': 'application/json' },
         body: {
@@ -19,7 +19,7 @@ export async function signUp(email: string, password: string): Promise<any> {
 
 export async function logIn(email: string, password: string): Promise<any> {
     const result = await request.post({
-        url: `${env.AUTH0.DOMAIN}/oauth/token`,
+        url: `https://${env.AUTH0.DOMAIN}/oauth/token`,
         json: true,
         headers: { 'Content-Type': 'application/json' },
         body: {

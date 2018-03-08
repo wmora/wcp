@@ -1,4 +1,5 @@
 import { connect as connectDb } from './db/db'
+import { authCheck } from './middleware/authentication'
 
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
@@ -20,7 +21,7 @@ app.use((request, response, next) => {
 })
 
 app.get('/matches', matchesController.listMatches)
-app.post('/picks', picksController.postPick)
+app.post('/picks', authCheck, picksController.postPick)
 app.post('/login', authenticationController.logIn)
 app.post('/signup', authenticationController.signUp)
 
