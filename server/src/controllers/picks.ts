@@ -2,10 +2,9 @@ import { Request, Response } from 'express'
 import { db } from '../db/db'
 import { MatchStatus } from '../interfaces/match'
 import * as matchController from './matches'
+import { Pick } from '../interfaces/pick'
 
-export function postPick(request: Request, response: Response): void {
-    // TODO: validateUser()
-
+export async function postPick(request: Request, response: Response): void {
     const { matchId, winningTeamId } = request.body
 
     const match = matchController.findMatch(matchId)
@@ -22,22 +21,34 @@ export function postPick(request: Request, response: Response): void {
     const isValidWinningTeamId = [match.homeTeam.id, match.awayTeam.id].some((teamId) => teamId === winningTeamId)
 
     if (!isValidWinningTeamId) {
-        response.status(400).send(`Invalid winningTeamId: ${winningTeamId}`)
+        response.status(400).send({
+            error: {
+                name: 'bad_request',
+                description: `Invalid winningTeamId: ${winningTeamId}`
+            }
+        })
+        return
     }
 
     const collection = db.collection('picks')
 
-    collection.insert(
+    await collection.updateOne(
         {
-            matchId,
-            winningTeamId
+            userId: request.user._id,
+            matchId
         },
-        (err, result) => {
-            if (err) {
-                response.sendStatus(400)
-            } else {
-                response.send({ prediction: result.ops[0] })
+        {
+            $set: {
+                winningTeamId
             }
-        }
+        },
+        { upsert: true }
     )
+
+    response.send({
+        matchId,
+        winningTeamId
+    })
 }
+
+export const getPicks = (request: Request, response: Response) => {}

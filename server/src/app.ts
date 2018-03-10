@@ -1,5 +1,5 @@
 import { connect as connectDb } from './db/db'
-import { authCheck } from './middleware/authentication'
+import { authCheck, fetchUser } from './middleware/authentication'
 
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
@@ -21,13 +21,16 @@ app.use((request, response, next) => {
 })
 
 app.get('/matches', matchesController.listMatches)
-app.post('/picks', authCheck, picksController.postPick)
+app.get('/picks', authCheck, fetchUser, picksController.getPicks)
+app.post('/picks', authCheck, fetchUser, picksController.postPick)
 app.post('/login', authenticationController.logIn)
 app.post('/signup', authenticationController.signUp)
 
 app.use((error, request, response, next) => {
     if (error.name === 'UnauthorizedError') {
         response.status(401).send('Invalid token')
+    } else {
+        response.status(error.status || 500).send(error)
     }
 })
 
