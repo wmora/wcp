@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { db } from '../db/db'
 import { MatchStatus } from '../interfaces/match'
-import * as matchController from './matches'
 import { Pick } from '../interfaces/pick'
+import * as matchController from './matches'
 
-export async function postPick(request: Request, response: Response): void {
+export async function postPick(request: Request, response: Response) {
     const { matchId, winningTeamId } = request.body
 
     const match = matchController.findMatch(matchId)
@@ -51,4 +51,18 @@ export async function postPick(request: Request, response: Response): void {
     })
 }
 
-export const getPicks = (request: Request, response: Response) => {}
+export const getPicks = async (request: Request, response: Response) => {
+    const collection = db.collection('picks')
+    const picks = await collection.find({ userId: request.user._id }, {}).toArray()
+
+    response.send({ picks: picks.map((pick) => transformPick(pick)) })
+}
+
+const transformPick = (pick): Pick => {
+    const { matchId, winningTeamId } = pick
+
+    return {
+        matchId,
+        winningTeamId
+    }
+}
