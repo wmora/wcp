@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Jumbotron, Grid, Col, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { isLoggedIn } from '../utils/authentication'
+import { isLoggedIn, getAccessToken } from '../utils/authentication'
 import LogIn from './LogIn'
 
 export default class Home extends Component {
@@ -25,14 +25,45 @@ export default class Home extends Component {
 
         fetch('http://localhost:3024/picks', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${getAccessToken()}`
+            },
             body: JSON.stringify(pick)
-        }).then((response) => response.json())
+        })
+            .then((response) => response.json())
+            .then((pick) => this.updateMatchPick(pick))
+    }
+
+    updateMatchPick = (pick) => {
+        const { matches } = this.state
+
+        for (let group of matches) {
+            const index = group.matches.findIndex((match) => match.id === pick.matchId)
+            if (index >= 0) {
+                const match = group.matches[index]
+                match.winningTeamId = pick.winningTeamId
+                group.matches[index] = match
+                this.setState({ matches })
+                break
+            }
+        }
+    }
+
+    fetchPicks = () => {
+        fetch('http://localhost:3024/picks', {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`
+            }
+        })
+            .then((response) => response.json())
+            .then(({ picks }) => {
+                picks.forEach((pick) => this.updateMatchPick(pick))
+            })
     }
 
     onTeamPicked = (e) => {
         if (isLoggedIn()) {
-            // TODO: Create pick
             this.postPick(e.target.id)
         } else {
             this.setState({
@@ -55,6 +86,7 @@ export default class Home extends Component {
                     matches
                 })
             })
+            .then(() => this.fetchPicks())
     }
 
     getFlagClass = (iso2) => {
@@ -71,13 +103,21 @@ export default class Home extends Component {
                     {group.matches.map((match) => {
                         const matchId = `${group.id}-${match.id}`
                         const homeTeamKey = `${match.id}-${match.homeTeam.id}`
+                        let homeTeamBsStyle
+                        if (match.winningTeamId === match.homeTeam.id) {
+                            homeTeamBsStyle = 'success'
+                        }
                         const awayTeamKey = `${match.id}-${match.awayTeam.id}`
+                        let awayTeamBsStyle
+                        if (match.winningTeamId === match.awayTeam.id) {
+                            awayTeamBsStyle = 'success'
+                        }
                         return (
                             <ListGroup key={matchId}>
-                                <ListGroupItem onClick={this.onTeamPicked} id={homeTeamKey}>
+                                <ListGroupItem onClick={this.onTeamPicked} id={homeTeamKey} bsStyle={homeTeamBsStyle}>
                                     <span className={this.getFlagClass(match.homeTeam.iso2)} /> {match.homeTeam.name}
                                 </ListGroupItem>
-                                <ListGroupItem onClick={this.onTeamPicked} id={awayTeamKey}>
+                                <ListGroupItem onClick={this.onTeamPicked} id={awayTeamKey} bsStyle={awayTeamBsStyle}>
                                     <span className={this.getFlagClass(match.awayTeam.iso2)} /> {match.awayTeam.name}
                                 </ListGroupItem>
                             </ListGroup>
