@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser'
 import * as express from 'express'
 
 import * as authenticationController from './controllers/authentication'
+import * as frontendController from './controllers/frontend'
 import * as matchesController from './controllers/matches'
 import * as picksController from './controllers/picks'
 
@@ -21,7 +22,8 @@ app.use((request, response, next) => {
 })
 
 app.get('/matches', matchesController.listMatches)
-app.get('/picks', authCheck, fetchUser, picksController.getPicks)
+app.get('/myhome', authCheck, fetchUser, frontendController.getHome)
+app.get('/picks', authCheck, fetchUser, picksController.listPicks)
 app.post('/picks', authCheck, fetchUser, picksController.postPick)
 app.post('/login', authenticationController.logIn)
 app.post('/signup', authenticationController.signUp)

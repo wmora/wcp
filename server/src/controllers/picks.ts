@@ -51,11 +51,15 @@ export async function postPick(request: Request, response: Response) {
     })
 }
 
-export const getPicks = async (request: Request, response: Response) => {
-    const collection = db.collection('picks')
-    const picks = await collection.find({ userId: request.user._id }, {}).toArray()
+export const listPicks = async (request: Request, response: Response) => {
+    const picks = await getPicks(request.user._id)
+    response.send({ picks })
+}
 
-    response.send({ picks: picks.map((pick) => transformPick(pick)) })
+export const getPicks = async (userId): Promise<Pick[]> => {
+    const collection = db.collection('picks')
+    const picks = await collection.find({ userId }, {}).toArray()
+    return picks.map((pick) => transformPick(pick))
 }
 
 const transformPick = (pick): Pick => {

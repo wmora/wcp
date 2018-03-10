@@ -3,6 +3,8 @@ import { Jumbotron, Grid, Col, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { isLoggedIn, getAccessToken } from '../utils/authentication'
 import LogIn from './LogIn'
 
+const BASE_URL = 'http://localhost:3024'
+
 export default class Home extends Component {
     constructor(props, context) {
         super(props, context)
@@ -23,7 +25,7 @@ export default class Home extends Component {
             winningTeamId
         }
 
-        fetch('http://localhost:3024/picks', {
+        fetch(`${BASE_URL}/picks`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,15 +52,17 @@ export default class Home extends Component {
         }
     }
 
-    fetchPicks = () => {
-        fetch('http://localhost:3024/picks', {
+    fetchUserHome = () => {
+        fetch(`${BASE_URL}/myhome`, {
             headers: {
                 Authorization: `Bearer ${getAccessToken()}`
             }
         })
             .then((response) => response.json())
-            .then(({ picks }) => {
-                picks.forEach((pick) => this.updateMatchPick(pick))
+            .then(({ matches }) => {
+                this.setState({
+                    matches
+                })
             })
     }
 
@@ -78,15 +82,22 @@ export default class Home extends Component {
         })
     }
 
-    componentDidMount() {
-        fetch('http://localhost:3024/matches')
+    fetchMatches = () => {
+        fetch(`${BASE_URL}/matches`)
             .then((response) => response.json())
             .then(({ matches }) => {
                 this.setState({
                     matches
                 })
             })
-            .then(() => this.fetchPicks())
+    }
+
+    componentDidMount() {
+        if (isLoggedIn()) {
+            this.fetchUserHome()
+        } else {
+            this.fetchMatches()
+        }
     }
 
     getFlagClass = (iso2) => {

@@ -20,6 +20,10 @@ function findMatchInRound(round: any, id: string): Match {
 }
 
 export function listMatches(request: Request, response: Response): void {
+    response.send({ matches: getMatches() })
+}
+
+export function getMatches() {
     const matches = []
 
     for (const group of Object.keys(data.groups)) {
@@ -30,7 +34,7 @@ export function listMatches(request: Request, response: Response): void {
         })
     }
 
-    response.send({ matches })
+    return matches
 }
 
 function transformMatch(match: any): Match {
