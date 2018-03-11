@@ -1,5 +1,4 @@
 import decode from 'jwt-decode'
-import { BrowserRouter } from 'react-router-dom'
 const ACCESS_TOKEN_KEY = 'access_token'
 
 export function getAccessToken() {
@@ -8,7 +7,6 @@ export function getAccessToken() {
 
 export function logout() {
     clearAccessToken()
-    BrowserRouter.push('/')
 }
 
 function clearAccessToken() {

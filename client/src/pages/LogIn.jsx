@@ -77,7 +77,7 @@ export default class LogIn extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.onModalDismiss}>Close</Button>
-                        <Button bsStyle="primary" onClick={this.onClick} type="submit">
+                        <Button bsStyle="primary" onClick={this.onClick}>
                             Log in
                         </Button>
                     </Modal.Footer>

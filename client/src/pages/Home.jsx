@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Jumbotron, Grid, Col, ListGroup, ListGroupItem } from 'react-bootstrap'
-import { isLoggedIn, getAccessToken } from '../utils/authentication'
+import { Jumbotron, Grid, Row, Col, ListGroup, ListGroupItem, Navbar, Nav, NavItem } from 'react-bootstrap'
+import { isLoggedIn, getAccessToken, logout } from '../utils/authentication'
 import LogIn from './LogIn'
 
 const BASE_URL = 'http://localhost:3024'
@@ -76,10 +76,23 @@ export default class Home extends Component {
         }
     }
 
+    onLogInSelected = () => {
+        this.setState({ showLogin: true })
+    }
+
+    onLogOutSelected = () => {
+        logout()
+        window.location.reload()
+    }
+
     onLogInResult = (success) => {
         this.setState({
             showLogin: false
         })
+
+        if (success) {
+            this.fetchUserHome()
+        }
     }
 
     fetchMatches = () => {
@@ -138,13 +151,38 @@ export default class Home extends Component {
             )
         })
 
+        const authNavItem = isLoggedIn() ? (
+            <NavItem onClick={this.onLogOutSelected}>Log Out</NavItem>
+        ) : (
+            <NavItem onClick={this.onLogInSelected}>Log In / Sign up</NavItem>
+        )
+
+        const navBar = (
+            <Navbar>
+                <Navbar.Header>
+                    <Navbar.Brand>WCP</Navbar.Brand>
+                </Navbar.Header>
+                <Nav>
+                    <NavItem eventKey={1} href="#">
+                        Leaderboard
+                    </NavItem>
+                </Nav>
+                <Nav pullRight>{authNavItem}</Nav>
+            </Navbar>
+        )
+
         return (
             <div>
-                <Jumbotron>
-                    <h1>Welcome!</h1>
-                    <p>Pick the winning teams!</p>
-                </Jumbotron>
-                <Grid>{matchesContent}</Grid>
+                <Grid>
+                    <Row>
+                        {navBar}
+                        <Jumbotron>
+                            <h1>Welcome!</h1>
+                            <p>Pick the winning teams!</p>
+                        </Jumbotron>
+                    </Row>
+                    <Row>{matchesContent}</Row>
+                </Grid>
                 <LogIn show={this.state.showLogin} onLogInResult={this.onLogInResult} />
             </div>
         )
