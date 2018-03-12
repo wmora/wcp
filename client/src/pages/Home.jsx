@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Jumbotron, Grid, Row, Col, ListGroup, ListGroupItem, Navbar, Nav, NavItem } from 'react-bootstrap'
+import { Jumbotron, Grid, Row, Col, ListGroup, Navbar, Nav, NavItem } from 'react-bootstrap'
+import Team from '../components/Team'
 import { isLoggedIn, getAccessToken, logout } from '../utils/authentication'
 import LogIn from './LogIn'
 
@@ -113,37 +114,39 @@ export default class Home extends Component {
         }
     }
 
-    getFlagClass = (iso2) => {
-        return `flag-icon flag-icon-${iso2}`
-    }
-
     render() {
         const { matches } = this.state
 
         const matchesContent = matches.map((group) => {
             return (
-                <Col md={4} key={group.id}>
+                <Col sm={4} key={group.id}>
                     <h1> {group.name} </h1>
                     {group.matches.map((match) => {
                         const matchId = `${group.id}-${match.id}`
                         const homeTeamKey = `${match.id}-${match.homeTeam.id}`
                         let homeTeamBsStyle
-                        if (match.winningTeamId === match.homeTeam.id) {
+                        if (match.winnerTeamId === match.homeTeam.id) {
                             homeTeamBsStyle = 'success'
                         }
                         const awayTeamKey = `${match.id}-${match.awayTeam.id}`
                         let awayTeamBsStyle
-                        if (match.winningTeamId === match.awayTeam.id) {
+                        if (match.winnerTeamId === match.awayTeam.id) {
                             awayTeamBsStyle = 'success'
                         }
                         return (
                             <ListGroup key={matchId}>
-                                <ListGroupItem onClick={this.onTeamPicked} id={homeTeamKey} bsStyle={homeTeamBsStyle}>
-                                    <span className={this.getFlagClass(match.homeTeam.iso2)} /> {match.homeTeam.name}
-                                </ListGroupItem>
-                                <ListGroupItem onClick={this.onTeamPicked} id={awayTeamKey} bsStyle={awayTeamBsStyle}>
-                                    <span className={this.getFlagClass(match.awayTeam.iso2)} /> {match.awayTeam.name}
-                                </ListGroupItem>
+                                <Team
+                                    id={homeTeamKey}
+                                    teamName={match.homeTeam.name}
+                                    teamIso2={match.homeTeam.iso2}
+                                    bsStyle={homeTeamBsStyle}
+                                />
+                                <Team
+                                    id={awayTeamKey}
+                                    teamName={match.awayTeam.name}
+                                    teamIso2={match.awayTeam.iso2}
+                                    bsStyle={awayTeamBsStyle}
+                                />
                             </ListGroup>
                         )
                     })}
