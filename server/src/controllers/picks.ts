@@ -5,7 +5,11 @@ import { Pick } from '../interfaces/pick'
 import * as matchController from './matches'
 
 export async function postPick(request: Request, response: Response) {
-    const { matchId, winningTeamId } = request.body
+    const { matchId, homeTeamResult, awayTeamResult } = request.body
+
+    if (!matchId || homeTeamResult === undefined || awayTeamResult === undefined) {
+        response.status(400).send('Missing parameter')
+    }
 
     const match = matchController.findMatch(matchId)
 
@@ -15,16 +19,10 @@ export async function postPick(request: Request, response: Response) {
     }
 
     if (match.status !== MatchStatus.Pending) {
-        response.status(400).send('Cannot modify prediction for match')
-    }
-
-    const isValidWinningTeamId = [match.homeTeam.id, match.awayTeam.id].some((teamId) => teamId === winningTeamId)
-
-    if (!isValidWinningTeamId) {
         response.status(400).send({
             error: {
                 name: 'bad_request',
-                description: `Invalid winningTeamId: ${winningTeamId}`
+                description: 'Cannot modify prediction for match'
             }
         })
         return
@@ -39,7 +37,8 @@ export async function postPick(request: Request, response: Response) {
         },
         {
             $set: {
-                winningTeamId
+                homeTeamResult,
+                awayTeamResult
             }
         },
         { upsert: true }
@@ -47,7 +46,8 @@ export async function postPick(request: Request, response: Response) {
 
     response.send({
         matchId,
-        winningTeamId
+        homeTeamResult,
+        awayTeamResult
     })
 }
 
@@ -63,10 +63,11 @@ export const getPicks = async (userId): Promise<Pick[]> => {
 }
 
 const transformPick = (pick): Pick => {
-    const { matchId, winningTeamId } = pick
+    const { matchId, homeTeamResult, awayTeamResult } = pick
 
     return {
         matchId,
-        winningTeamId
+        homeTeamResult,
+        awayTeamResult
     }
 }

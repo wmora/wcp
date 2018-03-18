@@ -1,4 +1,5 @@
 export interface Pick {
     matchId: string
-    winningTeamId: string
+    homeTeamResult: number
+    awayTeamResult: number
 }

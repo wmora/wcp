@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Jumbotron, Grid, Row, Col, ListGroup, Navbar, Nav, NavItem } from 'react-bootstrap'
-import Team from '../components/Team'
+import { Jumbotron, Grid, Row, Col, Navbar, Nav, NavItem } from 'react-bootstrap'
+import Match from '../components/Match'
+import { postPick } from '../utils/actions'
 import { isLoggedIn, getAccessToken, logout } from '../utils/authentication'
 import LogIn from './LogIn'
 
@@ -16,28 +17,6 @@ export default class Home extends Component {
         }
     }
 
-    postPick = (id) => {
-        const separatorIndex = id.indexOf('-')
-        const matchId = id.substring(0, separatorIndex)
-        const winningTeamId = id.substring(separatorIndex + 1, id.length)
-
-        const pick = {
-            matchId,
-            winningTeamId
-        }
-
-        fetch(`${BASE_URL}/picks`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${getAccessToken()}`
-            },
-            body: JSON.stringify(pick)
-        })
-            .then((response) => response.json())
-            .then((pick) => this.updateMatchPick(pick))
-    }
-
     updateMatchPick = (pick) => {
         const { matches } = this.state
 
@@ -45,7 +24,7 @@ export default class Home extends Component {
             const index = group.matches.findIndex((match) => match.id === pick.matchId)
             if (index >= 0) {
                 const match = group.matches[index]
-                match.winningTeamId = pick.winningTeamId
+                match.pick = pick
                 group.matches[index] = match
                 this.setState({ matches })
                 break
@@ -67,9 +46,9 @@ export default class Home extends Component {
             })
     }
 
-    onTeamPicked = (e) => {
+    onPickSubmit = (pick) => {
         if (isLoggedIn()) {
-            this.postPick(e.target.id)
+            postPick(pick).then((pick) => this.updateMatchPick(pick))
         } else {
             this.setState({
                 showLogin: true
@@ -122,32 +101,15 @@ export default class Home extends Component {
                 <Col sm={4} key={group.id}>
                     <h1> {group.name} </h1>
                     {group.matches.map((match) => {
-                        const matchId = `${group.id}-${match.id}`
-                        const homeTeamKey = `${match.id}-${match.homeTeam.id}`
-                        let homeTeamBsStyle
-                        if (match.winnerTeamId === match.homeTeam.id) {
-                            homeTeamBsStyle = 'success'
-                        }
-                        const awayTeamKey = `${match.id}-${match.awayTeam.id}`
-                        let awayTeamBsStyle
-                        if (match.winnerTeamId === match.awayTeam.id) {
-                            awayTeamBsStyle = 'success'
-                        }
                         return (
-                            <ListGroup key={matchId}>
-                                <Team
-                                    id={homeTeamKey}
-                                    teamName={match.homeTeam.name}
-                                    teamIso2={match.homeTeam.iso2}
-                                    bsStyle={homeTeamBsStyle}
-                                />
-                                <Team
-                                    id={awayTeamKey}
-                                    teamName={match.awayTeam.name}
-                                    teamIso2={match.awayTeam.iso2}
-                                    bsStyle={awayTeamBsStyle}
-                                />
-                            </ListGroup>
+                            <Match
+                                key={match.id}
+                                matchId={match.id}
+                                homeTeam={match.homeTeam}
+                                awayTeam={match.awayTeam}
+                                onPickSubmit={this.onPickSubmit}
+                                pick={match.pick}
+                            />
                         )
                     })}
                 </Col>

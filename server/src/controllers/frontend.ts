@@ -16,7 +16,7 @@ const updateMatchPick = (matches, pick) => {
         const index = group.matches.findIndex((match) => match.id === pick.matchId)
         if (index >= 0) {
             const match = group.matches[index]
-            match.winningTeamId = pick.winningTeamId
+            match.pick = pick
             group.matches[index] = match
             break
         }
