@@ -10,7 +10,10 @@ export default class Match extends Component {
 
         this.state = {
             showSave: false,
-            pick: JSON.parse(JSON.stringify(props.pick || {}))
+            pick: {
+                homeTeamResult: props.pick && `${props.pick.homeTeamResult}`,
+                awayTeamResult: props.pick && `${props.pick.awayTeamResult}`
+            }
         }
     }
 
@@ -23,7 +26,7 @@ export default class Match extends Component {
     }
 
     isValidScore = (score) => {
-        return score && isNumber(Number(score)) && score >= 0
+        return score && isNumber(score) && Number(score) >= 0
     }
 
     onScoreChanged = (teamId, score) => {
@@ -48,8 +51,8 @@ export default class Match extends Component {
             return isValidPick
         }
 
-        const isHomeTeamModified = originalPick.homeTeamResult !== pick.homeTeamResult
-        const isAwayTeamModified = originalPick.awayTeamResult !== pick.awayTeamResult
+        const isHomeTeamModified = originalPick.homeTeamResult !== Number(pick.homeTeamResult)
+        const isAwayTeamModified = originalPick.awayTeamResult !== Number(pick.awayTeamResult)
 
         return isValidPick && (isHomeTeamModified || isAwayTeamModified)
     }

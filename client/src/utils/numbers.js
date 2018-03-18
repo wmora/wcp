@@ -1,3 +1,5 @@
+const NUMBER_REGEX = /^\d+$/g
+
 export function isNumber(value) {
-    return Number(value) === value
+    return value.match(NUMBER_REGEX)
 }

@@ -1,15 +1,35 @@
 import { Request, Response } from 'express'
+import * as _ from 'lodash'
 import { db } from '../db/db'
 import { MatchStatus } from '../interfaces/match'
 import { Pick } from '../interfaces/pick'
 import * as matchController from './matches'
 
-export async function postPick(request: Request, response: Response) {
-    const { matchId, homeTeamResult, awayTeamResult } = request.body
+const isValidScore = (score: number): boolean => {
+    return _.isInteger(score) && score >= 0
+}
 
-    if (!matchId || homeTeamResult === undefined || awayTeamResult === undefined) {
-        response.status(400).send('Missing parameter')
+export async function postPick(request: Request, response: Response) {
+    const { matchId, homeTeamResult: pickedHomeTeamResult, awayTeamResult: pickedAwayTeamResult } = request.body
+
+    if (!matchId) {
+        response.status(400).send('Missing matchId')
+        return
     }
+
+    const SCORES = [pickedHomeTeamResult, pickedAwayTeamResult]
+
+    SCORES.forEach((score) => {
+        if (!isValidScore(Number(score))) {
+            response.status(400).send({
+                error: {
+                    name: 'bad_request',
+                    description: `Invalid value ${score}`
+                }
+            })
+            return
+        }
+    })
 
     const match = matchController.findMatch(matchId)
 
@@ -27,6 +47,9 @@ export async function postPick(request: Request, response: Response) {
         })
         return
     }
+
+    const homeTeamResult = Number(pickedHomeTeamResult)
+    const awayTeamResult = Number(pickedAwayTeamResult)
 
     const collection = db.collection('picks')
 
